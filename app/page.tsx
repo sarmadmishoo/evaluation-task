@@ -1,95 +1,129 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import React from 'react';
+import {COLOR_OPTIONS,API_URL} from '../app/constants/CONSTANTS'
+import { ItemProps, itemItem } from './Types/types'; 
+import Item from './Item'; 
+import styles from './page.module.css';
 
-export default function Home() {
+function Home() {
+  const [product, setProduct] = React.useState<ItemProps[]>([]);  // All product to be locally store in product state 
+  const [item, setItem] = React.useState<itemItem[]>([]); // All Item to be locally store in Item state which they selected to purchase
+  const [selectedColor, setSelectedColor] = React.useState<string>(''); //For selected color filter
+
+
+  // get data from API once Page render first time
+  React.useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await fetch(
+          API_URL
+        );
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  // Method to add multiple item from array list 
+  const increaseItem = (itemId: number) => {
+    const updateditem = [...item];
+    const existingProduct = updateditem.find((item) => item.id === itemId);
+
+    if (existingProduct) {
+      existingProduct.qty += 1;
+    } else {
+      const productToAdd = product.find((item) => item.id === itemId);
+      if (productToAdd) {
+        updateditem.push({ ...productToAdd, qty: 1 });
+      }
+    }
+    setItem(updateditem);
+  };
+  
+// Method to remove multiple item from array list
+  const decreaseItem = (itemId: number) => {
+    const updateditem = item.map((item) => {
+      if (item.id === itemId) {
+        item.qty -= 1;
+      }
+      return item;
+    });
+
+    setItem(updateditem);
+  };
+
+  //Clear All Item from Array
+  const clearItem = (itemId: number) => {
+    const updateditem = item.filter((item) => item.id !== itemId);
+    setItem(updateditem);
+  };
+
+
+  // calculate All item price 
+  const calculateTotalPrice = () => {
+    return item.reduce((total, item) => total + item.qty * item.price, 0);
+  };
+
+  // filter on the basis of color
+  const filteredproduct = product.filter((item: ItemProps) => {
+    return selectedColor ? item.colour === selectedColor : true;
+  });
+
+  // display item quantity
+  const getItemQty = (itemId: number) => {
+    const itemQuantity = item.find((item) => {
+      return itemId === item.id;
+    });
+
+    return itemQuantity?.qty || 0;
+  };
+
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+      <select
+        className={styles.selectColor}
+        value={selectedColor}
+        onChange={(e) => {
+          setSelectedColor(e.target.value);
+          setItem([]);
+        }}
+      >
+        {COLOR_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      {filteredproduct.map((item: ItemProps) => (
+        <Item
+          key={item.id}
+          id={item.id}
+          name={item.name}
+          price={item.price}
+          img={item.img}
+          colour={item.colour}
+          increaseItem={increaseItem}
+          decreaseItem={decreaseItem}
+          clearItem={clearItem}
+          quantity={getItemQty}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      ))}
+      <div className={styles.total}>
+        <h1>Total : {calculateTotalPrice().toFixed(2)}</h1>
       </div>
     </main>
-  )
-}
+  );
+};
+
+export default Home;
