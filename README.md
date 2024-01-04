@@ -1,7 +1,10 @@
-<<<<<<< HEAD
+
 # evaluation-task
 =======
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a App for Evaluation 
+video will gave you whole demo
+
+https://www.loom.com/share/23082dff3e404b8a8bce432fa4a56918
 
 ## Getting Started
 
