@@ -9,15 +9,33 @@
 
 .total {
   display: flex;
-  justify-content: flex-end;
-  padding: 0 10rem;
-  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+}
+.dropdown {
+  display: inherit;
+  align-self: self-start;
+}
+.selectColor {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  width: 160px;
+  height: 40px;
+}
+.selectColor:focus {
+  outline: none;
 }
 
-.selectColor {
-  align-self: flex-start;
-  margin-left: 10.5%;
-  padding: 5px;
-  width: 15%;
-  height: 40px;
+@media only screen and (max-width: 800px) {
+  /* For mobile phones: */
+  .total {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 13px;
+  }
 }

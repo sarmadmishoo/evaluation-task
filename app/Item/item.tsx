@@ -20,9 +20,7 @@ function Item({
   return (
     <div className={styles.description}>
       <div className={styles.center}>
-        <div className={styles.image}>
-          <img src={img} className={styles.image} alt={name}></img>
-        </div>
+        <img src={img} className={styles.image} alt={name}></img>
         <div className={styles.content}>
           <div className={styles.heading}>{name}</div>
           <div className={styles.price}>${price}</div>
@@ -41,7 +39,7 @@ function Item({
         <div className={styles.quantityParent}>
           <div className={styles.qty}>{qty}</div>
           <button
-            className={styles.card}
+            className={styles.card_remove}
             onClick={() => {
               clearItem(id);
             }}
