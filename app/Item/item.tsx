@@ -1,6 +1,16 @@
 "use client";
 import React from "react";
 import { ItemProps, Props } from "../Types/types"; // Import the common types
+import {
+  ArrowRight,
+  Basket2Fill,
+  CartDashFill,
+  CartPlus,
+  CartPlusFill,
+  NodeMinus,
+  PlusCircle,
+  Trash2Fill,
+} from "react-bootstrap-icons";
 import styles from "./item.module.css";
 
 function Item({
@@ -34,7 +44,7 @@ function Item({
           }}
           disabled={qty === "Qty" ? true : false}
         >
-          -
+          <CartDashFill size={20} />
         </button>
         <div className={styles.quantityParent}>
           <div className={styles.qty}>{qty}</div>
@@ -53,7 +63,7 @@ function Item({
             increaseItem(id);
           }}
         >
-          +
+          <CartPlusFill size={20} />
         </button>
       </div>
     </div>
