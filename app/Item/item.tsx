@@ -1,16 +1,7 @@
 "use client";
 import React from "react";
 import { ItemProps, Props } from "../Types/types"; // Import the common types
-import {
-  ArrowRight,
-  Basket2Fill,
-  CartDashFill,
-  CartPlus,
-  CartPlusFill,
-  NodeMinus,
-  PlusCircle,
-  Trash2Fill,
-} from "react-bootstrap-icons";
+import { CartDashFill, CartPlusFill } from "react-bootstrap-icons";
 import styles from "./item.module.css";
 
 function Item({
